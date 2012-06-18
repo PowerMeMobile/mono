@@ -26,6 +26,36 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+function ValidatorEnable(val, enable) {	
+	if (enable == false) {
+		SetValidatorEnabledState (val, false);
+		window.ValidatorSucceeded (val);
+		return;
+	}
+	
+	SetValidatorEnabledState (val, true);
+	
+	if (typeof(val.evaluationfunction) != "function") {
+		return;
+	}
+	
+	var isvalid = val.evaluationfunction.call (this, val);
+	val._isvalid = isvalid;
+	
+	if (!isvalid) {
+		window.validation_result = false;
+	}
+}
+
+function SetValidatorEnabledState(val, enabled) {
+	if (val._enabled == undefined) {
+		val.enabled = enabled ? "True" : "False";
+	}
+	else {
+		val._enabled = enabled;
+	}
+}
+ 
 function WebFormValidation_Initialize(webForm) {
 
 webForm.have_validation_summaries = false;
@@ -55,7 +85,8 @@ webForm.ValidatorOnLoad = function  ()
 			if (typeof(vo.enabled) == "string" && vo.enabled == "False")
 				vo._enabled = false;
 			else
-				vo._enabled = true;
+				//vo._enabled = true;
+                                 vo._enabled = webForm.GetElement (vo.controltovalidate) != null;
 			
 			if (typeof(vo.evaluationfunction) == "string")
 				vo.evaluationfunction = webForm [vo.evaluationfunction];
