@@ -59,6 +59,11 @@ namespace System.Web.Services.Protocols
 		public SoapDocumentationHandler (Type type, HttpContext context): base (type)
 		{
 			_url = context.Request.Url.ToString();
+			if (context.Request.Headers["X-Public-Url"] != null) {
+				Console.WriteLine("[[SOAP_DEBUG]] Overriding url: {0}", context.Request.Headers["Unproxied-Url"]);
+				_url = context.Request.Headers["X-Public-Url"];
+			}
+			
 			int i = _url.IndexOf ('?');
 			if (i != -1) _url = _url.Substring (0,i);
 			_typeStubInfo = (SoapTypeStubInfo) TypeStubManager.GetTypeStub (ServiceType, "Soap");
