@@ -94,6 +94,11 @@ definition correctly.
       <except positions="13-28" match="ActiveTouristBot"/>
     </group>
 
+    <group positions="7-10" match="/5.0" javascript="true">
+      <!-- Mozilla 5.0 compatible browsers (including MSIE 9.0) -->
+      <except positions="13-28" match="ActiveTouristBot"/>
+    </group>
+
     <group scanfrom="12" skip="4" match=") Gecko/" javascript="true">
       <!-- All the Gecko-based browsers -->
     </group>
