@@ -385,11 +385,9 @@ namespace System.Web.UI.WebControls {
 
 		internal ArrayList GetSelectedIndicesInternal ()
 		{
-			ArrayList selected = null;
-			int count;
-			
+			ArrayList selected = new ArrayList();
+			int count;			
 			if (items != null && (count = items.Count) > 0) {
-				selected = new ArrayList ();
 				for (int i = 0; i < count; i++) {
 					if (items [i].Selected)
 						selected.Add (i);
