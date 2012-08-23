@@ -1060,6 +1060,7 @@ namespace System.Web
 		static void FinalErrorWrite (HttpResponse response, string error)
 		{
 			try {
+				response.StatusCode = 500;
 				response.Write (error);
 				response.Flush (true);
 			} catch {
