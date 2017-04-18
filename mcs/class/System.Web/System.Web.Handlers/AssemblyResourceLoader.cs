@@ -178,26 +178,39 @@ namespace System.Web.Handlers
 			
 			string[] parts = val.Split ('_');
 			if (parts.Length != 3)
+            {
+                Console.WriteLine("DecryptAssemblyResourceError: parts.Length <> 3, " + val);
 				return null;
+            }
 
 			string asmNameHash = parts [0];
 			string resNameHash = parts [1];
 			try {
 				_embeddedResourcesLock.EnterReadLock ();
-				if (!_embeddedResources.TryGetValue (asmNameHash, out entry) || entry == null)
-					return null;
+                if (!_embeddedResources.TryGetValue(asmNameHash, out entry) || entry == null)
+                {
+                    Console.WriteLine("DecryptAssemblyResourceError: cannot get assemply, " + asmNameHash);                    
+                    return null;
+                }
 				
 				EmbeddedResource res;
 				if (!entry.Resources.TryGetValue (resNameHash, out res) || res == null) {
 #if SYSTEM_WEB_EXTENSIONS
 					bool debug = parts [2] == "t";
 					if (!debug)
-						return null;
+                    {
+                        Console.WriteLine("DecryptAssemblyResourceError: debug is disabled, parts [2] = " + parts[2] + " nameHash: " + resNameHash);					
+                        return null;
+                    }
 
 					if (!entry.Resources.TryGetValue (resNameHash.Substring (0, resNameHash.Length - 1), out res))
+                    {
+                        Console.WriteLine("DecryptAssemblyResourceError: debug is enabled, nameHash: " + resNameHash);					
 						return null;
+                    }
 #else
-					return null;
+                    Console.WriteLine("DecryptAssemblyResourceError: resource not found resNameHash: " + resNameHash);
+                    return null;
 #endif
 				}
 				
